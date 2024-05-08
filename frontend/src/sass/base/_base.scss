@@ -1,0 +1,32 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+  margin: none;
+  padding: none;
+}
+
+body {
+  box-sizing: border-box;
+  color: $color-text-dark;
+  font-family: "Regular", sans-serif;
+  background: $admin-q;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  // background: linear-gradient(to right,$color-button-light 0%, $color-button-dark 100%);
+  // background-image: url("./Resources/patternpad-2 rotated.svg"); 
+}
+
+::placeholder{
+  color: #555;
+}

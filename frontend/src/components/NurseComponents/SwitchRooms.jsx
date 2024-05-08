@@ -1,0 +1,185 @@
+import React, { useEffect, useState } from "react";
+import { patientInfo } from "../Extra";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import { FaXmark } from "react-icons/fa6";
+import { IoClose } from "react-icons/io5";
+import { IoMdSave } from "react-icons/io";
+
+export default function SwitchRooms(props) {
+    // const [pID, setPID] = useState("");
+    const [patient, setPatient] = useState({ id: "", name: "", room_id: "" });
+    const [roomType, setRoomType] = useState("");
+    // let patientWithoutRooms;
+    const [patientWithoutRooms, setPatientWithoutRooms] = useState([patientInfo]);
+    const [availableRooms, setAvailableRooms] = useState([{ room_number: null, room_id: null }]);
+    const [selectedRoom, setSelectedRoom] = useState({ room_number: null, room_id: null })
+
+    async function fetchData() {
+        await axios.get(process.env.NODE_ENV==='production' ?"patAR" :'http://localhost:3005/patAR', {
+            params: { department: props.empData1.department },
+        })
+            .then((response) => {
+                console.table(response.data);
+                setPatientWithoutRooms(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
+
+    useEffect(() => {
+        fetchData();
+        // console.log(props.Data);        
+        // setPatientWithoutRooms(props.Data);
+    }, []);
+
+    function updatePatientList(patient) {
+        setPatient({
+            id: patient.patient_id,
+            name: patient.name,
+            room_id: patient.room_id,
+        });
+        console.log(patient);
+    }
+
+    async function updateRoomType(e) {
+        console.log(e.target.value);
+        await setRoomType(e.target.value);
+        axios.get(process.env.NODE_ENV==='production' ?"avlRooms" :'http://localhost:3005/avlRooms', {
+            params: { roomType: e.target.value },
+        })
+            .then(response => {
+                console.log(response.data);
+                setAvailableRooms(response.data);
+            })
+            .catch(err => {
+                console.log(err.message);
+            })
+    }
+
+    async function saveRoomInfo() {
+        console.log(patient, selectedRoom);
+
+        if (patient.id === "") {
+            toast.error("Please select a patient!");
+            return;
+        }
+
+        if (roomType === "") {
+            toast.error("Please select a room type!");
+            return;
+        }
+
+        if (selectedRoom.room_number === null) {
+            toast.error("Please select a room!");
+            return;
+        }
+
+        await axios.post(process.env.NODE_ENV==='production' ?"assignRoom" :'http://localhost:3005/assignRoom', {
+            patient_id: patient.id,
+            room_number: selectedRoom.room_number,
+            room_id: selectedRoom.room_id,
+        })
+            .then(response => {
+                console.log(response);
+
+                if (response.status === 200) {
+                    toast.success(`${roomType} category room with room number: ${selectedRoom.room_number}, assigned to ${patient.name}`);
+                    setPatient({ id: "", name: "", room_id: "" });
+                    setRoomType("");
+                    fetchData();
+                    setAvailableRooms([{ room_number: null, room_id: null }]);
+                    setSelectedRoom({ room_number: null, room_id: null });
+                }
+            })
+    }
+
+    return (
+        <div className="cont-info">
+            <ToastContainer autoClose={5000} />
+            <div className="cont-info-head">
+                <h1>Switch Patient Rooms</h1>
+                <div className="right">
+                    <button className="menu-button" onClick={() => { props.closeMenu("Rooms") }}><FaXmark className="cross" /></button>
+                </div>
+            </div>
+            <div className="cont-body">
+                <div className="patient-part part">
+                    <div className="inp-field">
+                        <h1>Select Patient</h1>
+                    </div>
+                    <div className='patient-list'>
+                        {patient.id !== "" ?
+                            <div className="patient-list-item il-blk">
+                                <button className="il-blk fl-r" onClick={() => { setPatient({ id: "", name: "", room_id: "" }) }}><IoClose className="cell-close" /></button>
+                                <span className="il-blk"><div className="heading il-blk">ID</div>: <div className="value il-blk"> {patient.id} </div></span>
+                                <span className="il-blk"><div className="heading il-blk">Name</div>: <div className="value il-blk"> {patient.name} </div></span>
+                                <span className="il-blk"><div className="heading il-blk">Current Room</div>: <div className="value il-blk"> {patient.room_id} </div></span>
+                            </div>
+                            :
+                            <div className="patient-list-inner message">
+                                <div className="patient-list-body wrapper">
+                                    {patientWithoutRooms.map((patient, index) => {
+                                        return (
+                                            <div className="list-item" onClick={() => { updatePatientList(patient) }} key={index}>
+                                                <span className="il-blk"><div className="heading il-blk">ID</div>: <div className="value il-blk"> {patient.patient_id} </div></span>
+                                                <span className="il-blk"><div className="heading il-blk">Name</div>: <div className="value il-blk"> {patient.name} </div></span>
+                                                <span className="il-blk"><div className="heading il-blk">Current Room</div>: <div className="value il-blk"> {patient.room_id} </div></span>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div className="room-part part">
+                    {/* <h1>Room</h1> */}
+                    <div className="inp-field">
+                        <h1>Select New Room</h1>
+                    </div>
+                    <div className="room-list">
+                        <select name="Room type" className="table-input menu-button no-marg il-blk" onChange={updateRoomType}>
+                            <option selected disabled value="">None Selected</option>
+                            <option value="ICU">ICU</option>
+                            <option value="ICCU">ICCU</option>
+                            <option value="General">General</option>
+                            <option value="Premium">Premium</option>
+                            <option value="Reserved">Reserved</option>
+                        </select>
+                        {availableRooms[0].room_id !== null &&
+                            <div className="patient-list-body wrapper">
+                                <div className="message">
+                                    <h2>Available rooms</h2>
+                                </div>
+                                <div className="room-cells-cont">
+                                    {availableRooms.map((room, index) => {
+                                        return (
+                                            <button className={`${selectedRoom.room_number === room.room_number ? "patient-list-cells room-cells il-blk selected" : "patient-list-cells room-cells il-blk"}`} key={index} onClick={() => { setSelectedRoom(room) }}>
+                                                <div className="cell-info il-blk">
+                                                    <span className="id blk">{room.room_number}</span>
+                                                    {/* <span className="name blk">{`${patient.name}`}</span> */}
+                                                </div>
+                                            </button>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                            // :
+                            // <div className="message">
+                            //     <h2>Select Room Type</h2>
+                            //     {/* <input type="dropdown" /> */}
+                            // </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div className="cont-bottom">
+                <div className="buttons">
+                    <button className="menu-button" onClick={saveRoomInfo}><IoMdSave className="react-icons" />Save Changes</button>
+                </div>
+            </div>
+        </div>
+    )
+}

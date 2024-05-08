@@ -1,0 +1,77 @@
+.menu-button {
+    width: auto;
+    height: 4rem;
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 1rem;
+    // background-color: $color-button-light;
+    background-color: $buttons;
+    color: $color-text-light;
+    font-size: 1.8rem;
+    margin-left: 1rem;
+    vertical-align: middle;
+    
+    &-back {
+        text-align: center;
+        height: 4rem;
+        padding: 0.8rem 1rem 0.8rem 1.6rem;
+        border: none;
+        border-radius: 1rem;
+        // background-color: $color-button-dark;
+        background-color: $admin-s;
+        color: $color-text-dark;
+        font-size: 1.8rem;
+        margin-left: 1rem;
+        vertical-align: middle;
+        font-size: 1.8rem;
+    }
+}
+
+.react-icons {
+    // text-align: center;
+    vertical-align: middle;
+    font-size: 1.8rem;
+    margin: 0rem .8rem 0.3rem 0rem;
+    padding: 0;
+
+    &-close {
+        margin: 1rem 1rem .9rem 1rem;
+        font-size: 2.4rem;
+    }
+
+    &-arrows {
+        // margin: 0rem .2rem .4rem 0rem;
+
+        &-left {
+            font-size: 2.2rem;
+            margin: -.1rem 0.3rem 0.4rem 0rem;
+        }
+        &-right {
+            font-size: 2.2rem;
+            margin: -.1rem 0.15rem 0.6rem 0.15rem;
+        }
+    }
+}
+
+.table {
+    &-input{
+        width: 24rem;
+        font-size: 1.6rem;
+        background-color: $admin-q;
+        color: $color-text-dark;
+        border: 2px solid $admin-p;
+        outline: none;
+    }
+
+    &-buttons {
+        padding: 1.5rem 2rem;
+        // background-color: $admin-p;
+
+        button {
+            // width: 10rem;
+            border: none;
+            outline: none;
+            padding: 1rem 2rem;
+        }
+    }
+}

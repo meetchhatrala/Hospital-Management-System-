@@ -1,0 +1,120 @@
+@import "./abstracts/variables";
+
+@import "./base/base";
+@import "./base/typography";
+@import "./base/animations";
+
+@import "./components/mixins";
+@import "./components/menuButton";
+@import "./components/blockTypes";
+
+@import "./layout/header";
+@import "./pages/admin";
+// @import "./pages/doctor";
+
+.Login {
+  width: 100vw;
+  height: 100vh;
+  // background-image: linear-gradient(135deg, #abdcff 10%, #0396ff 100%);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.Toastify__toast-body {
+  font-family: "Regular", sans-serif;
+  font-size: 1.6rem;
+}
+
+.Toastify__toast-icon {
+  margin: 0 0 .2rem 0;
+}
+
+/* .Header-links{
+    display: inline-block;
+}
+
+.Header-link-list li{
+    padding: 0px 20px;
+} */
+
+.Login {
+  &-container-outer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 45rem;
+    // background-color: #ffffff41;
+    border: 0.1rem solid rgba($color-white, 0.542);
+    backdrop-filter: blur(30px);
+    border-radius: 3rem;
+    box-shadow: 0px 0px 40px 15px rgba(0, 0, 0, 0.1);
+  }
+  &-container-inner {
+    padding: 2rem;
+    text-align: center;
+  }
+  &-Heading {
+    font-size: 3.5rem;
+    letter-spacing: 0.5px;
+    color: $color-text-dark;
+    padding: 3rem 0rem 1rem 0rem;
+    font-family: "Heavy", sans-serif;
+  }
+  &-form {
+    margin: 2rem 0rem;
+
+    &-input {
+      width: 36rem;
+      height: 5rem;
+      padding: 0rem 2rem;
+      font-size: 1.4rem;
+      color: #000;
+      border: 2px solid transparent;
+      border-radius: 1rem;
+      outline: none;
+      background-color: $color-input;
+      transition: all .3s ease;
+      
+      &:focus{
+        border: 2px solid $admin-f;
+        transition: all .3s ease;
+      }
+    }
+
+    &-dropdown {
+      width: 100%;
+    }
+
+    &-button {
+      width: 36rem;
+      height: 5rem;
+      border: none;
+      font-family: "Heavy", sans-serif;
+      letter-spacing: 0.5px;
+      border-radius: 1rem;
+      // background-color: $color-secondary;
+      background: $admin-s;
+      color: rgb($color-white, 1);
+      font-size: 1.9rem;
+      transition: all 0.2s linear;
+
+      &:hover {
+        background: $sidebar;
+        transition: all 0.2s linear;
+      }
+    }
+  }
+}
+
+.item-margin {
+  margin: 1.2rem 0rem;
+}
+
+::placeholder {
+  font-family: "Regular", sans-serif;
+}
+
+.login-heading{
+  background-color: $admin-s;
+  // opacity: .8;
+}
